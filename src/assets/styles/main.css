@@ -1,0 +1,625 @@
+/* Importing fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+/* CSS Variables for general design */
+:root {
+    --primary-color: #4A90E2; /* A vibrant blue */
+    --primary-dark: #3A7BD5; /* Darker shade of primary */
+    --secondary-color: #50E3C2; /* A bright teal */
+    --secondary-dark: #3EC1A7; /* Darker shade of secondary */
+    --card-background: #ffffff; /* Clean white for cards */
+    --text-color: #333333; /* Dark grey for main text */
+    --light-text-color: #666666; /* Lighter grey for secondary text */
+    --border-color: #e0e0e0; /* Light grey for borders */
+    --header-height: 70px; /* Taller header for presence */
+    --border-radius-main: 12px; /* More rounded corners for main elements */
+    --border-radius-small: 8px; /* Slightly less rounded for inputs/buttons */
+
+    /* Uiverse.io specific variables for forms */
+    --uiverse-input-focus: #2d8cf0; /* Blue for input focus */
+    --uiverse-font-color: #323232; /* Dark grey for form text */
+    --uiverse-font-color-sub: #666; /* Lighter grey for placeholders */
+    --uiverse-bg-color: #fff; /* White background for inputs/buttons */
+    --uiverse-main-color: #323232; /* Main dark color for borders/shadows */
+
+    /* New variable for background image URL */
+    --background-image-url: url('https://i.ibb.co/gLJz5NYZ/image.png'); /* REPLACE THIS WITH YOUR IMAGE URL */
+}
+
+/* Base styles for the body */
+body {
+    font-family: 'Roboto', sans-serif; /* Applying Roboto font */
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Remove default padding */
+    box-sizing: border-box; /* Box model */
+    /* Background image properties */
+    background-image: var(--background-image-url);
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-attachment: fixed; /* Keep image fixed when scrolling */
+    
+    color: var(--text-color); /* Text color */
+    line-height: 1.6; /* Line height */
+    min-height: 100vh; /* Ensure full viewport height */
+    display: flex; /* Use flexbox for app container */
+    flex-direction: column;
+}
+
+/* Root Vue app container */
+#app {
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack children vertically */
+    min-height: 100vh; /* Ensure app takes full height */
+    /* Add a semi-transparent overlay to make text more readable on top of the image */
+    background-color: rgba(255, 255, 255, 0.75); /* White overlay with 75% opacity */
+}
+
+/* General container for page content */
+.container {
+    max-width: 960px; /* Max width */
+    margin: 0 auto; /* Center horizontally */
+    padding: 30px 20px; /* Increased padding */
+    flex-grow: 1; /* Allow container to grow */
+    display: flex; /* Use flexbox for content alignment */
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+}
+
+/* Header styles */
+header {
+    background-color: var(--card-background); /* White background like forms */
+    color: var(--uiverse-main-color); /* Dark text color */
+    padding: 15px 20px; /* Padding */
+    text-align: center; /* Center text */
+    box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
+    border: 2px solid var(--uiverse-main-color); /* Uiverse border */
+    border-radius: var(--border-radius-main); /* Rounded corners */
+    height: var(--header-height); /* Header height */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    position: sticky; /* Sticky header */
+    top: 0;
+    z-index: 1000; /* Ensure it stays on top */
+    margin: 20px auto; /* Center header and add margin */
+    max-width: 900px; /* Limit header width */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+/* Navigation menu styles */
+nav ul {
+    list-style: none; /* Remove list bullets */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    display: flex; /* Flexbox */
+    justify-content: center; /* Center items */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Full width */
+}
+
+nav ul li {
+    margin: 0 20px; /* Increased spacing between items */
+}
+
+nav ul li a,
+nav ul li button { /* Apply styles to both links and buttons in nav */
+    color: var(--uiverse-main-color); /* Explicitly set dark text color for nav links/buttons */
+    text-decoration: none; /* No underline */
+    font-family: 'Montserrat', sans-serif; /* Montserrat font for nav */
+    font-weight: 700; /* Bold font */
+    font-size: 17px; /* Slightly larger font */
+    transition: color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    background: none; /* No background for button */
+    border: none; /* No border for button */
+    cursor: pointer; /* Pointer cursor */
+    padding: 8px 0; /* Padding for click area */
+    position: relative; /* For underline effect */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+nav ul li a::after,
+nav ul li button::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    background-color: var(--primary-color); /* Primary blue underline */
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after,
+nav ul li button:hover::after {
+    width: 100%; /* Expand underline on hover */
+}
+
+nav ul li a:hover,
+nav ul li button:hover {
+    color: var(--uiverse-input-focus); /* Change color on hover to focus blue */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* General styles for forms and cards (adapted from Uiverse.io) */
+.auth-form, .dictionary-form, .flashcard-card, .word-item, .flashcard-controls,
+.hero-section, .features-section, .word-of-the-day-section, .testimonials-section { /* ДОБАВЛЕНЫ СЕКЦИИ ГЛАВНОЙ СТРАНИЦЫ */
+    background-color: var(--card-background); /* Clean white for cards */
+    padding: 30px; /* Increased padding */
+    border-radius: var(--border-radius-main); /* Rounded corners */
+    border: 2px solid var(--uiverse-main-color); /* Uiverse border */
+    box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
+    margin-top: 30px; /* Increased top margin */
+    width: 100%; /* Full width within container */
+    max-width: 700px; /* Увеличена максимальная ширина для секций главной страницы */
+    text-align: center; /* Center content */
+    box-sizing: border-box; /* Include padding in width/height */
+    margin-bottom: 30px; /* Добавлен отступ снизу для разделения секций */
+}
+
+/* Input field styles (adapted from Uiverse.io) */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+.group-select { /* Apply to select as well */
+    width: calc(100% - 20px); /* Full width minus padding */
+    height: 40px; /* Fixed height for inputs */
+    border-radius: var(--border-radius-small); /* Rounded corners */
+    border: 2px solid var(--uiverse-main-color); /* Uiverse border */
+    background-color: var(--uiverse-bg-color); /* White background */
+    box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
+    font-size: 15px; /* Font size */
+    font-weight: 600; /* Bold font */
+    color: var(--uiverse-font-color); /* Text color */
+    padding: 5px 10px; /* Padding */
+    outline: none; /* Remove default outline */
+    margin-bottom: 18px; /* Increased bottom margin */
+    box-sizing: border-box; /* Box model */
+    transition: all 0.3s ease; /* Smooth transitions */
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="text"]::placeholder {
+    color: var(--uiverse-font-color-sub); /* Placeholder color */
+    opacity: 0.8;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+.group-select:focus {
+    border: 2px solid var(--uiverse-input-focus); /* Highlight on focus */
+    box-shadow: 0 0 0 3px rgba(45, 140, 240, 0.2); /* Subtle glow */
+}
+
+/* Button styles (adapted from Uiverse.io) */
+button {
+    width: auto; /* Allow width to adjust to content */
+    min-width: 120px; /* Ensure a minimum width */
+    height: 40px; /* Fixed height */
+    border-radius: var(--border-radius-small); /* Rounded corners */
+    border: 2px solid var(--uiverse-main-color); /* Uiverse border */
+    background-color: var(--uiverse-bg-color); /* White background */
+    box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
+    font-size: 17px; /* Font size */
+    font-weight: 600; /* Bold font */
+    color: var(--uiverse-font-color); /* Text color */
+    cursor: pointer; /* Pointer cursor */
+    transition: all 0.3s ease; /* Smooth transitions */
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.5px; /* Letter spacing */
+    padding: 10px 20px; /* Adjusted padding to ensure text fits */
+    box-sizing: border-box; /* Include padding in width/height */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+button:hover {
+    background-color: var(--uiverse-bg-color); /* Maintain white background */
+    box-shadow: 6px 6px var(--uiverse-main-color); /* Stronger shadow on hover */
+    transform: translate(-3px, -3px); /* Lift effect */
+}
+
+button:active {
+    box-shadow: 0px 0px var(--uiverse-main-color); /* Press effect */
+    transform: translate(3px, 3px); /* Press effect */
+}
+
+/* Specific styles for Auth.js flip card (from Uiverse.io) */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 400px;
+    perspective: 1000px;
+    position: relative;
+    border: 2px solid var(--uiverse-main-color);
+    box-shadow: 4px 4px var(--uiverse-main-color);
+    border-radius: var(--border-radius-main);
+    background-color: var(--card-background);
+}
+
+.switch {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 50px;
+    height: 20px;
+    z-index: 10;
+}
+
+.card-side::before {
+    /* content: 'Вход'; */
+    position: absolute;
+    left: -70px;
+    top: 0;
+    width: 100px;
+    text-decoration: underline;
+    color: var(--uiverse-font-color);
+    font-weight: 600;
+}
+
+.card-side::after {
+    /* content: 'Регистрация'; */
+    position: absolute;
+    left: 70px;
+    top: 0;
+    width: 100px;
+    text-decoration: none;
+    color: var(--uiverse-font-color);
+    font-weight: 600;
+}
+
+.toggle {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid var(--uiverse-main-color);
+    box-shadow: 4px 4px var(--uiverse-main-color);
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--uiverse-bg-color);
+    transition: 0.3s;
+}
+
+.slider:before {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    border: 2px solid var(--uiverse-main-color);
+    border-radius: 5px;
+    left: -2px;
+    bottom: 2px;
+    background-color: var(--uiverse-bg-color);
+    box-shadow: 0 3px 0 var(--uiverse-main-color);
+    transition: 0.3s;
+}
+
+.toggle:checked + .slider {
+    background-color: var(--uiverse-input-focus);
+}
+
+.toggle:checked ~ .card-side:before {
+    text-decoration: none;
+}
+
+.toggle:checked ~ .card-side:after {
+    text-decoration: underline;
+}
+
+/* card */
+.flip-card__inner {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: transparent;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.toggle:checked ~ .flip-card__inner {
+    transform: rotateY(180deg);
+}
+
+.toggle:checked ~ .flip-card__front {
+    box-shadow: none;
+}
+
+.flip-card__front, .flip-card__back {
+    padding: 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: var(--card-background);
+    gap: 20px;
+    border-radius: var(--border-radius-main);
+    border: 2px solid var(--uiverse-main-color);
+    box-shadow: 4px 4px var(--uiverse-main-color);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.flip-card__back {
+    transform: rotateY(180deg);
+}
+
+.flip-card__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.title {
+    margin: 20px 0;
+    font-size: 25px;
+    font-weight: 900;
+    text-align: center;
+    color: var(--uiverse-main-color);
+}
+
+/* Flashcard container styles */
+.flashcard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 300px;
+    perspective: 1000px;
+    margin-top: 30px;
+}
+
+/* Flashcard card styles */
+.flashcard-card {
+    min-width: 320px;
+    min-height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+    border: 2px solid var(--uiverse-main-color);
+    box-shadow: 4px 4px var(--uiverse-main-color);
+    border-radius: var(--border-radius-main);
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+/* Flipped state for flashcard */
+.flashcard-card.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Front and back sides of the flashcard */
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    box-sizing: border-box;
+    border-radius: var(--border-radius-main);
+}
+
+/* Back side of the flashcard */
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+
+/* Flashcard controls (shuffle, next, group select) */
+.flashcard-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 20px;
+    max-width: 600px;
+}
+
+/* Word list styles for dictionary */
+.word-list {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 700px;
+}
+
+/* Individual word item in the list */
+.word-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px 20px;
+    border: 2px solid var(--uiverse-main-color);
+    box-shadow: 4px 4px var(--uiverse-main-color);
+    border-radius: var(--border-radius-small);
+    background-color: var(--card-background);
+    transition: transform 0.2s ease;
+}
+
+.word-item:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px var(--uiverse-main-color);
+}
+
+.word-item span {
+    flex-grow: 1;
+    margin-right: 15px;
+    font-size: 17px;
+    color: var(--text-color);
+}
+
+.word-item em {
+    color: var(--light-text-color);
+    font-size: 0.9em;
+}
+
+.word-item button {
+    margin: 0;
+    width: auto;
+    height: auto;
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+    box-shadow: 4px 4px #a72834;
+    color: white;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.word-item button:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    box-shadow: 6px 6px #a72834;
+    transform: translate(-3px, -3px);
+}
+
+.word-item button:active {
+    box-shadow: 0px 0px #a72834;
+    transform: translate(3px, 3px);
+}
+
+/* Group select dropdown */
+.group-select {
+    width: 100%;
+    max-width: 250px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+/* General h2 for sections */
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--uiverse-main-color);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 28px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for h1 on Home page */
+.home-page h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--uiverse-main-color);
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Styles for general paragraph text on Home page */
+.home-page p {
+    color: var(--uiverse-font-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+/* Adjust the overlay opacity on #app */
+#app {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    nav ul li {
+        margin: 0;
+    }
+    header {
+        height: auto;
+        padding: 15px 10px;
+        margin: 10px auto;
+    }
+    .auth-form, .dictionary-form, .flashcard-card, .word-item, .flashcard-controls,
+    .hero-section, .features-section, .word-of-the-day-section, .testimonials-section { /* Адаптация для мобильных */
+        margin-top: 20px;
+        padding: 20px;
+        max-width: 95%;
+        margin-bottom: 20px;
+    }
+    .flashcard-card {
+        min-width: 280px;
+        min-height: 160px;
+        font-size: 22px;
+    }
+    .flashcard-controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .flashcard-controls button, .group-select {
+        width: 90%;
+        max-width: 300px;
+    }
+    .word-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+    .word-item span {
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+    .word-item button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .wrapper {
+        width: 100%;
+        max-width: 300px;
+        margin-top: 20px;
+    }
+}
