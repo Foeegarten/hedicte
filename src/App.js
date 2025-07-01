@@ -16,6 +16,7 @@ export default {
                 <nav>
                     <ul>
                         <li><a href="#/">Главная</a></li>
+                        <!-- Упрощено: теперь просто одна ссылка на страницу логина/регистрации -->
                         <li v-if="!user"><a href="#/login">Вход / Регистрация</a></li>
                         <li v-if="user"><a href="#/dictionary">Словарь</a></li>
                         <li v-if="user"><a href="#/flashcards">Карточки</a></li>
@@ -32,13 +33,12 @@ export default {
     `,
     data() {
         return {
-            currentRoute: window.location.hash, // Текущий хэш URL
-            user: null, // Информация о текущем пользователе
+            currentRoute: window.location.hash,
+            user: null,
         };
     },
     computed: {
         currentRouteComponent() {
-            // Определяем, какой компонент страницы отображать в зависимости от маршрута
             switch (this.currentRoute) {
                 case '#/login':
                     return 'LoginPage';
@@ -52,30 +52,28 @@ export default {
         },
     },
     async created() {
-        // Слушаем изменения хэша URL для маршрутизации
         window.addEventListener('hashchange', () => {
             this.currentRoute = window.location.hash;
         });
 
-        // Устанавливаем начальное состояние пользователя, используя глобальный Supabase
-        const { data: { user } = {} } = await this.$supabase.auth.getUser(); // Добавлено = {} для безопасной деструктуризации
+        const { data: { user } = {} } = await this.$supabase.auth.getUser();
         this.user = user;
 
-        // Слушаем изменения состояния аутентификации Supabase
         this.$supabase.auth.onAuthStateChange((_event, session) => {
             this.user = session ? session.user : null;
         });
     },
     methods: {
         async handleLogout() {
-            // Обработчик выхода из системы, используя глобальный Supabase
             const { error } = await this.$supabase.auth.signOut();
             if (error) {
                 console.error('Ошибка при выходе:', error.message);
             } else {
-                this.user = null; // Сбрасываем пользователя
-                window.location.hash = '#/'; // Перенаправляем на домашнюю страницу
+                this.user = null;
+                window.location.hash = '#/';
             }
         },
+        // Удаляем setAuthMode, так как он больше не нужен
+        // setAuthMode(mode) { ... }
     },
 };

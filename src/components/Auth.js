@@ -1,30 +1,37 @@
 export default {
+    // Удаляем проп initialMode, так как переключение будет внутренним
+    // props: {
+    //     initialMode: {
+    //         type: String,
+    //         default: 'login'
+    //     }
+    // },
     template: `
-        <div class="wrapper">
-            <div class="card-switch">
-                <input type="checkbox" id="toggle" class="toggle" v-model="isLogin" />
-                <label for="toggle" class="slider"></label>
-                <span class="card-side"></span>
+        <div class="auth-panel-wrapper"> <!-- Новый контейнер для кнопок и формы -->
+            <div class="auth-toggle-buttons">
+                <button @click="currentMode = 'login'" :class="{ 'active': currentMode === 'login' }">Вход</button>
+                <button @click="currentMode = 'register'" :class="{ 'active': currentMode === 'register' }">Регистрация</button>
             </div>
-            <div class="flip-card__inner">
-                <div class="flip-card__front">
+
+            <div class="auth-form">
+                <div v-if="currentMode === 'login'">
                     <div class="title">Вход</div>
-                    <form class="flip-card__form" @submit.prevent="handleSubmit">
+                    <form class="auth-form-inner" @submit.prevent="handleSubmit">
                         <input type="email" v-model="email" placeholder="Email" class="flip-card__input" required />
                         <input type="password" v-model="password" placeholder="Пароль" class="flip-card__input" required />
                         <button type="submit" class="flip-card__btn">Войти</button>
                     </form>
-                    <p v-if="error" style="color: red; font-size: 14px; margin-top: 10px;">{{ error }}</p>
                 </div>
-                <div class="flip-card__back">
+
+                <div v-else>
                     <div class="title">Регистрация</div>
-                    <form class="flip-card__form" @submit.prevent="handleSubmit">
+                    <form class="auth-form-inner" @submit.prevent="handleSubmit">
                         <input type="email" v-model="email" placeholder="Email" class="flip-card__input" required />
                         <input type="password" v-model="password" placeholder="Пароль" class="flip-card__input" required />
                         <button type="submit" class="flip-card__btn">Зарегистрироваться</button>
                     </form>
-                    <p v-if="error" style="color: red; font-size: 14px; margin-top: 10px;">{{ error }}</p>
                 </div>
+                <p v-if="error" style="color: red; font-size: 14px; margin-top: 10px;">{{ error }}</p>
             </div>
         </div>
     `,
@@ -32,24 +39,22 @@ export default {
         return {
             email: '',
             password: '',
-            isLogin: true, // Флаг для переключения между входом и регистрацией
+            currentMode: 'login', // По умолчанию показываем форму входа
             error: null, // Сообщение об ошибке
         };
     },
     methods: {
         async handleSubmit() {
-            this.error = null; // Сбрасываем ошибку перед новой попыткой
+            this.error = null;
             try {
                 let authResponse;
 
-                if (this.isLogin) {
-                    // Попытка входа, используя глобальный Supabase
+                if (this.currentMode === 'login') {
                     authResponse = await this.$supabase.auth.signInWithPassword({
                         email: this.email,
                         password: this.password,
                     });
-                } else {
-                    // Попытка регистрации, используя глобальный Supabase
+                } else { // currentMode === 'register'
                     authResponse = await this.$supabase.auth.signUp({
                         email: this.email,
                         password: this.password,
@@ -59,38 +64,38 @@ export default {
                 const { data, error } = authResponse;
 
                 if (error) {
-                    throw error; // Если есть ошибка, выбрасываем ее
+                    throw error;
                 }
 
-                // Проверяем, что объект user существует
                 if (!data || !data.user) {
-                    // Это может случиться при успешной регистрации, когда требуется подтверждение email
-                    if (!this.isLogin) {
+                    if (this.currentMode === 'register') {
                         this.error = "Регистрация успешна! Пожалуйста, проверьте вашу почту для подтверждения аккаунта.";
                         console.log("Регистрация успешна, но user объект не получен (возможно, требуется подтверждение email).");
-                        this.$emit('auth-success', null); // Эмитируем null, чтобы показать, что пользователь не вошел
+                        // После успешной регистрации переключаемся на форму входа
+                        this.currentMode = 'login';
+                        this.email = ''; // Очищаем поля
+                        this.password = '';
+                        this.$emit('auth-success', null);
                         return;
                     } else {
                         throw new Error("Не удалось войти. Проверьте учетные данные или статус аккаунта.");
                     }
                 }
 
-                // При успешной аутентификации эмитируем событие с объектом user
                 this.$emit('auth-success', data.user);
             } catch (err) {
-                this.error = err.message; // Устанавливаем сообщение об ошибке
+                this.error = err.message;
                 console.error('Ошибка аутентификации:', err.message);
             }
         },
     },
-    watch: {
-        // Добавляем watcher для сброса полей и ошибок при переключении режима
-        isLogin(newVal, oldVal) {
-            if (newVal !== oldVal) {
-                this.error = null;
-                this.email = '';
-                this.password = '';
-            }
-        }
-    }
+    // Удаляем watcher, так как initialMode больше не проп
+    // watch: {
+    //     initialMode(newMode) {
+    //         this.currentMode = newMode;
+    //         this.error = null;
+    //         this.email = '';
+    //         this.password = '';
+    //     }
+    // }
 };

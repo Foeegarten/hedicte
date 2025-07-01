@@ -44,6 +44,7 @@ body {
     min-height: 100vh; /* Ensure full viewport height */
     display: flex; /* Use flexbox for app container */
     flex-direction: column;
+    overflow-x: hidden; /* ГЛАВНОЕ: предотвращаем горизонтальную прокрутку */
 }
 
 /* Root Vue app container */
@@ -65,6 +66,8 @@ body {
     flex-direction: column;
     align-items: center; /* Center content horizontally */
     justify-content: center; /* Center content vertically */
+    width: 100%; /* Убедимся, что контейнер занимает 100% ширины */
+    box-sizing: border-box; /* Включаем padding в ширину */
 }
 
 /* Header styles */
@@ -85,6 +88,7 @@ header {
     z-index: 1000; /* Ensure it stays on top */
     margin: 20px auto; /* Center header and add margin */
     max-width: 900px; /* Limit header width */
+    width: calc(100% - 40px); /* Адаптивная ширина */
     box-sizing: border-box; /* Include padding in width/height */
 }
 
@@ -97,10 +101,12 @@ nav ul {
     justify-content: center; /* Center items */
     align-items: center; /* Center vertically */
     width: 100%; /* Full width */
+    flex-wrap: wrap; /* Разрешаем элементам переноситься на новую строку */
 }
 
 nav ul li {
     margin: 0 20px; /* Increased spacing between items */
+    white-space: nowrap; /* Предотвращаем перенос текста внутри ссылки */
 }
 
 nav ul li a,
@@ -143,9 +149,9 @@ nav ul li button:hover {
     transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* General styles for forms and cards (adapted from Uiverse.io) */
+/* General styles for forms, cards, and main page sections (adapted from Uiverse.io) */
 .auth-form, .dictionary-form, .flashcard-card, .word-item, .flashcard-controls,
-.hero-section, .features-section, .word-of-the-day-section, .testimonials-section { /* ДОБАВЛЕНЫ СЕКЦИИ ГЛАВНОЙ СТРАНИЦЫ */
+.hero-section, .features-section, .word-of-the-day-section, .testimonials-section {
     background-color: var(--card-background); /* Clean white for cards */
     padding: 30px; /* Increased padding */
     border-radius: var(--border-radius-main); /* Rounded corners */
@@ -153,10 +159,10 @@ nav ul li button:hover {
     box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
     margin-top: 30px; /* Increased top margin */
     width: 100%; /* Full width within container */
-    max-width: 700px; /* Увеличена максимальная ширина для секций главной страницы */
+    max-width: 700px; /* Increased max width for main page sections */
     text-align: center; /* Center content */
     box-sizing: border-box; /* Include padding in width/height */
-    margin-bottom: 30px; /* Добавлен отступ снизу для разделения секций */
+    margin-bottom: 30px; /* Added bottom margin to separate sections */
 }
 
 /* Input field styles (adapted from Uiverse.io) */
@@ -227,149 +233,77 @@ button:active {
     transform: translate(3px, 3px); /* Press effect */
 }
 
-/* Specific styles for Auth.js flip card (from Uiverse.io) */
-.wrapper {
+/* NEW styles for Auth.js internal toggle buttons and container */
+.auth-panel-wrapper { /* New wrapper for buttons + form */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 300px;
-    height: 400px;
-    perspective: 1000px;
-    position: relative;
-    border: 2px solid var(--uiverse-main-color);
-    box-shadow: 4px 4px var(--uiverse-main-color);
-    border-radius: var(--border-radius-main);
+    width: 100%;
+    max-width: 500px; /* Same max-width as the form itself */
+    margin-top: 30px;
+    box-sizing: border-box;
+    /* Применяем стили панели к этому контейнеру */
     background-color: var(--card-background);
-}
-
-.switch {
-    position: absolute;
-    top: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 50px;
-    height: 20px;
-    z-index: 10;
-}
-
-.card-side::before {
-    /* content: 'Вход'; */
-    position: absolute;
-    left: -70px;
-    top: 0;
-    width: 100px;
-    text-decoration: underline;
-    color: var(--uiverse-font-color);
-    font-weight: 600;
-}
-
-.card-side::after {
-    /* content: 'Регистрация'; */
-    position: absolute;
-    left: 70px;
-    top: 0;
-    width: 100px;
-    text-decoration: none;
-    color: var(--uiverse-font-color);
-    font-weight: 600;
-}
-
-.toggle {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    box-sizing: border-box;
-    border-radius: 5px;
-    border: 2px solid var(--uiverse-main-color);
-    box-shadow: 4px 4px var(--uiverse-main-color);
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--uiverse-bg-color);
-    transition: 0.3s;
-}
-
-.slider:before {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    border: 2px solid var(--uiverse-main-color);
-    border-radius: 5px;
-    left: -2px;
-    bottom: 2px;
-    background-color: var(--uiverse-bg-color);
-    box-shadow: 0 3px 0 var(--uiverse-main-color);
-    transition: 0.3s;
-}
-
-.toggle:checked + .slider {
-    background-color: var(--uiverse-input-focus);
-}
-
-.toggle:checked ~ .card-side:before {
-    text-decoration: none;
-}
-
-.toggle:checked ~ .card-side:after {
-    text-decoration: underline;
-}
-
-/* card */
-.flip-card__inner {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background-color: transparent;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-}
-
-.toggle:checked ~ .flip-card__inner {
-    transform: rotateY(180deg);
-}
-
-.toggle:checked ~ .flip-card__front {
-    box-shadow: none;
-}
-
-.flip-card__front, .flip-card__back {
-    padding: 20px;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    background: var(--card-background);
-    gap: 20px;
+    padding: 30px;
     border-radius: var(--border-radius-main);
     border: 2px solid var(--uiverse-main-color);
     box-shadow: 4px 4px var(--uiverse-main-color);
+    margin-bottom: 30px; /* Отступ снизу */
+}
+
+.auth-toggle-buttons {
+    display: flex;
+    gap: 15px; /* Space between buttons */
+    margin-bottom: 20px; /* Space between buttons and form */
     width: 100%;
-    height: 100%;
+    justify-content: center;
+}
+
+.auth-toggle-buttons button {
+    flex: 1; /* Allow buttons to grow and share space */
+    max-width: 180px; /* Limit individual button width */
+    background-color: var(--card-background); /* White background */
+    border: 2px solid var(--uiverse-main-color); /* Uiverse border */
+    box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
+    color: var(--uiverse-main-color);
+    font-weight: 700;
+    text-transform: none; /* Keep original casing */
+    letter-spacing: normal;
+    padding: 10px 15px;
+}
+
+.auth-toggle-buttons button.active {
+    background-color: var(--uiverse-input-focus); /* Highlight active button */
+    color: white; /* White text for active button */
+    border-color: var(--uiverse-input-focus);
+    box-shadow: 4px 4px var(--primary-dark); /* Darker shadow for active */
+}
+
+.auth-toggle-buttons button:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 6px 6px var(--uiverse-main-color);
+}
+
+.auth-toggle-buttons button.active:hover {
+    box-shadow: 6px 6px var(--primary-dark); /* Darker shadow for active */
+}
+
+/* Adjust auth-form to be a single panel now */
+.auth-form {
+    /* Удаляем padding, border, box-shadow, background-color, border-radius отсюда,
+       так как они теперь применяются к .auth-panel-wrapper */
+    padding: 0; /* Сбрасываем внутренний отступ, если он был */
+    border: none; /* Сбрасываем рамку */
+    box-shadow: none; /* Сбрасываем тень */
+    background-color: transparent; /* Сбрасываем фон */
+    border-radius: 0; /* Сбрасываем радиус */
+    width: 100%;
+    max-width: 500px;
     box-sizing: border-box;
+    text-align: center;
 }
 
-.flip-card__back {
-    transform: rotateY(180deg);
-}
-
-.flip-card__form {
+.auth-form-inner { /* New class for the form itself */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -377,13 +311,6 @@ button:active {
     width: 100%;
 }
 
-.title {
-    margin: 20px 0;
-    font-size: 25px;
-    font-weight: 900;
-    text-align: center;
-    color: var(--uiverse-main-color);
-}
 
 /* Flashcard container styles */
 .flashcard-container {
@@ -438,7 +365,7 @@ button:active {
 
 /* Back side of the flashcard */
 .flashcard-back {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) rotateZ(0deg);
 }
 
 
@@ -508,12 +435,12 @@ button:active {
 .word-item button:hover {
     background-color: #c82333;
     border-color: #c82333;
-    box-shadow: 6px 6px #a72834;
+    box-shadow: 6px 6px var(--a72834);
     transform: translate(-3px, -3px);
 }
 
 .word-item button:active {
-    box-shadow: 0px 0px #a72834;
+    box-shadow: 0px 0px var(--a72834);
     transform: translate(3px, 3px);
 }
 
@@ -583,7 +510,7 @@ h2 {
         margin: 10px auto;
     }
     .auth-form, .dictionary-form, .flashcard-card, .word-item, .flashcard-controls,
-    .hero-section, .features-section, .word-of-the-day-section, .testimonials-section { /* Адаптация для мобильных */
+    .hero-section, .features-section, .word-of-the-day-section, .testimonials-section {
         margin-top: 20px;
         padding: 20px;
         max-width: 95%;
@@ -617,9 +544,10 @@ h2 {
         margin-left: 0;
     }
 
-    .wrapper {
+    /* .wrapper is no longer needed */
+    /* .wrapper {
         width: 100%;
         max-width: 300px;
         margin-top: 20px;
-    }
+    } */
 }

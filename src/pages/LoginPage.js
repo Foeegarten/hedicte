@@ -6,10 +6,15 @@ export default {
     },
     template: `
         <div class="container">
-            <!-- Слушаем событие 'auth-success' от компонента Auth -->
+            <!-- Больше не передаем initialMode, так как Auth.js управляет им сам -->
             <Auth @auth-success="handleAuthSuccess" />
         </div>
     `,
+    // Удаляем data() и computed() свойства, связанные с authMode и localStorage
+    // data() { return { authMode: 'login', }; },
+    // computed: { computedAuthMode() { ... } },
+    // Удаляем created() для localStorage
+    // created() { ... },
     methods: {
         handleAuthSuccess(user) {
             console.log('Аутентификация успешна для пользователя:', user);
