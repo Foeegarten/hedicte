@@ -12,6 +12,10 @@
     --light-text-color: #666666; /* Lighter grey for secondary text */
     --border-color: #e0e0e0; /* Light grey for borders */
     --header-height: 70px; /* Taller header for presence */
+    --header-padding-vertical: 15px; /* Вертикальный отступ хедера */
+    /* ИЗМЕНЕНО: Учитываем, что на мобилке хедер может быть выше из-за переноса строк */
+    --header-total-height-desktop: calc(var(--header-height) + (var(--header-padding-vertical) * 2));
+    --header-total-height-mobile: 100px; /* Увеличиваем эту высоту для мобильных, чтобы учесть перенос строк */
     --border-radius-main: 12px; /* More rounded corners for main elements */
     --border-radius-small: 8px; /* Slightly less rounded for inputs/buttons */
 
@@ -23,7 +27,7 @@
     --uiverse-main-color: #323232; /* Main dark color for borders/shadows */
 
     /* New variable for background image URL */
-    --background-image-url: url('https://i.ibb.co/gLJz5NYZ/image.png'); /* REPLACE THIS WITH YOUR IMAGE URL */
+    --background-image-url: url('https://i.ibb.co/gLJz5NYZ/image.png'); 
 }
 
 /* Base styles for the body */
@@ -45,6 +49,8 @@ body {
     display: flex; /* Use flexbox for app container */
     flex-direction: column;
     overflow-x: hidden; /* ГЛАВНОЕ: предотвращаем горизонтальную прокрутку */
+    padding-top: var(--header-total-height-desktop); /* ИСПОЛЬЗУЕМ ДЕСКТОПНУЮ ВЫСОТУ ПО УМОЛЧАНИЮ */
+    transform: none; /* Убедимся, что нет никаких трансформаций */
 }
 
 /* Root Vue app container */
@@ -53,7 +59,8 @@ body {
     flex-direction: column; /* Stack children vertically */
     min-height: 100vh; /* Ensure app takes full height */
     /* Add a semi-transparent overlay to make text more readable on top of the image */
-    background-color: rgba(255, 255, 255, 0.75); /* White overlay with 75% opacity */
+    background-color: rgba(255, 255, 255, 0.85); /* ИЗМЕНЕНО: Увеличена непрозрачность до 85% */
+    transform: none; /* Убедимся, что нет никаких трансформаций */
 }
 
 /* General container for page content */
@@ -74,7 +81,7 @@ body {
 header {
     background-color: var(--card-background); /* White background like forms */
     color: var(--uiverse-main-color); /* Dark text color */
-    padding: 15px 20px; /* Padding */
+    padding: var(--header-padding-vertical) 20px; /* Используем переменную для вертикального отступа */
     text-align: center; /* Center text */
     box-shadow: 4px 4px var(--uiverse-main-color); /* Uiverse shadow */
     border: 2px solid var(--uiverse-main-color); /* Uiverse border */
@@ -83,12 +90,12 @@ header {
     display: flex; /* Flexbox for alignment */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
-    position: sticky; /* Sticky header */
+    position: fixed; /* Теперь хедер фиксирован */
     top: 0;
+    left: 0; /* Добавляем left и width для fixed позиционирования */
+    width: 100%; /* Добавляем width для fixed позиционирования */
     z-index: 1000; /* Ensure it stays on top */
-    margin: 20px auto; /* Center header and add margin */
-    max-width: 900px; /* Limit header width */
-    width: calc(100% - 40px); /* Адаптивная ширина */
+    max-width: unset; /* Сбрасываем max-width для fixed элемента */
     box-sizing: border-box; /* Include padding in width/height */
 }
 
@@ -101,7 +108,7 @@ nav ul {
     justify-content: center; /* Center items */
     align-items: center; /* Center vertically */
     width: 100%; /* Full width */
-    flex-wrap: wrap; /* Разрешаем элементам переноситься на новую строку */
+    flex-wrap: wrap; /* Разрешаем элементам переноситься на новую строку, если не умещаются */
 }
 
 nav ul li {
@@ -488,7 +495,7 @@ h2 {
 
 /* Adjust the overlay opacity on #app */
 #app {
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.85); /* ИЗМЕНЕНО: Увеличена непрозрачность до 85% */
 }
 
 /* Responsive adjustments */
@@ -497,38 +504,51 @@ h2 {
         padding: 20px 15px;
     }
     nav ul {
-        flex-direction: column;
+        flex-direction: row; /* Навигация в строку */
+        flex-wrap: nowrap; /* Не переносим элементы, чтобы они умещались в одну строку */
+        justify-content: center;
         align-items: center;
-        gap: 10px;
+        gap: 6px; /* Еще сильнее уменьшен отступ между элементами */
+        padding: 5px 0; /* Немного уменьшен горизонтальный padding */
+        overflow-x: auto; /* Если не умещаются, появится прокрутка ВНУТРИ навигации */
+        -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
     }
     nav ul li {
-        margin: 0;
+        margin: 0; /* Удалены индивидуальные отступы */
+        flex-shrink: 0; /* Не позволяем элементам сжиматься, сохраняя их min-content */
+    }
+    nav ul li a,
+    nav ul li button {
+        font-size: 12px; /* Еще сильнее уменьшен размер шрифта для мобильных */
+        padding: 4px 6px; /* Еще сильнее скорректирован padding */
+        white-space: nowrap; /* Убедимся, что текст не переносится */
     }
     header {
-        height: auto;
-        padding: 15px 10px;
-        margin: 10px auto;
+        /* height: auto;  Удалено: чтобы хедер имел фиксированную высоту, заданную в :root */
+        padding: var(--header-padding-vertical) 10px; /* Используем переменную для вертикального отступа */
     }
-    .auth-form, .dictionary-form, .flashcard-card, .word-item, .flashcard-controls,
-    .hero-section, .features-section, .word-of-the-day-section, .testimonials-section {
-        margin-top: 20px;
-        padding: 20px;
-        max-width: 95%;
-        margin-bottom: 20px;
+    body {
+        padding-top: var(--header-total-height-mobile); /* ИСПОЛЬЗУЕМ МОБИЛЬНУЮ ВЫСОТУ НА МОБИЛКЕ */
+    }
+    .flashcard-controls {
+        flex-direction: column; /* Возвращаем в столбец для лучшей читаемости */
+        flex-wrap: nowrap; /* Убираем перенос, так как теперь в столбец */
+        gap: 15px; /* Возвращаем больший отступ */
+        max-width: 300px; /* Ограничиваем ширину контейнера */
+        margin-left: auto; /* Центрируем */
+        margin-right: auto; /* Центрируем */
+    }
+    .flashcard-controls button, .group-select {
+        width: 100%; /* Занимают всю доступную ширину */
+        max-width: 250px; /* Ограничиваем максимальную ширину */
+        font-size: 16px; /* Увеличиваем размер шрифта */
+        padding: 10px 15px; /* Увеличиваем padding */
+        box-sizing: border-box; /* Убедимся, что padding включен в ширину */
     }
     .flashcard-card {
         min-width: 280px;
         min-height: 160px;
         font-size: 22px;
-    }
-    .flashcard-controls {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    .flashcard-controls button, .group-select {
-        width: 90%;
-        max-width: 300px;
     }
     .word-item {
         flex-direction: column;
@@ -543,11 +563,4 @@ h2 {
         width: 100%;
         margin-left: 0;
     }
-
-    /* .wrapper is no longer needed */
-    /* .wrapper {
-        width: 100%;
-        max-width: 300px;
-        margin-top: 20px;
-    } */
 }

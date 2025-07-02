@@ -7,12 +7,11 @@ export default {
     template: `
         <div class="container">
             <div v-if="user">
-                <!-- Отображаем компонент словаря, если пользователь авторизован -->
                 <Dictionary />
             </div>
             <div v-else>
                 <!-- Сообщение, если пользователь не авторизован -->
-                <p>Пожалуйста, <a href="#/login">войдите</a>, чтобы получить доступ к вашему словарю.</p>
+                <p>Please, <a href="#/login">log in</a>, to access your dictionary.</p>
             </div>
         </div>
     `,

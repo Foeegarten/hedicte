@@ -39,38 +39,13 @@ export default {
 
             <!-- Дополнительные секции, например, "Слово Дня" -->
             <!-- Для реального "Слова Дня" вам потребуется логика для его загрузки -->
-            <section class="word-of-the-day-section">
-                <h2>Слово Дня</h2>
-                <div class="flashcard-card-small" :class="{ 'flipped': isWordOfTheDayFlipped }" @click="flipWordOfTheDay">
-                    <div class="flashcard-front-small">
-                        {{ wordOfTheDay.hebrew_word }} ({{ wordOfTheDay.transcription }})
-                    </div>
-                    <div class="flashcard-back-small">
-                        {{ wordOfTheDay.translation }}
-                    </div>
-                </div>
-                <!-- Кнопка переворота для слова дня, если нужно -->
-                <!-- <button @click="flipWordOfTheDay" class="small-button">Перевернуть</button> -->
-            </section>
 
-            <!-- Секция отзывов -->
-            <section class="testimonials-section">
-                <h2>Что говорят наши пользователи</h2>
-                <div class="testimonial-item">
-                    <p>"Это приложение изменило мой подход к изучению иврита. Карточки и словарь просто великолепны!"</p>
-                    <p class="author">- Мария К.</p>
-                </div>
-                <div class="testimonial-item">
-                    <p>"Очень удобно и эффективно. Возможность группировать слова - это то, что мне было нужно!"</p>
-                    <p class="author">- Давид Л.</p>
-                </div>
-            </section>
         </div>
     `,
     data() {
         return {
-            user: null, // Будет обновляться из App.js или из глобального Vue.$supabase
-            wordOfTheDay: { // Пример слова дня, можно загружать из базы
+            user: null, 
+            wordOfTheDay: {
                 hebrew_word: 'שלום',
                 transcription: 'шалом',
                 translation: 'мир, привет',
@@ -84,8 +59,8 @@ export default {
         }
     },
     async created() {
-        // Получаем пользователя из глобального Supabase, если он есть
-        const { data: { user } = {} } = await this.$supabase.auth.getUser(); // Добавлено = {} для безопасной деструктуризации
+
+        const { data: { user } = {} } = await this.$supabase.auth.getUser(); 
         this.user = user;
     }
 };
